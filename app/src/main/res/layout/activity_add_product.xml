@@ -9,18 +9,19 @@
     tools:context=".activity.AddProductActivity">
 
     <!-- Product Title -->
+
+    <!-- Product Name -->
     <TextView
         android:id="@+id/productTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="24dp"
         android:text="@string/add_product_view_product"
-        android:textSize="40sp"
         android:textColor="@color/lavender"
+        android:textSize="40sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Product Name -->
     <EditText
         android:id="@+id/edtProductName"
         android:layout_width="0dp"
@@ -107,8 +108,8 @@
 
     <ImageView
         android:id="@+id/imgPreview"
-        android:layout_width="200dp"
-        android:layout_height="160dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
         android:layout_marginTop="20dp"
         android:contentDescription="@string/image_picker_description"
         android:onClick="openFileChooserAdd"

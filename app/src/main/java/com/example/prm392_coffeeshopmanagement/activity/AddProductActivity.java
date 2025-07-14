@@ -22,6 +22,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import com.example.prm392_coffeeshopmanagement.repository.CategoryRepository;
 
 import com.example.prm392_coffeeshopmanagement.R;
 import com.example.prm392_coffeeshopmanagement.entity.Category;
