@@ -27,6 +27,7 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.example.prm392_coffeeshopmanagement.R;
 import com.example.prm392_coffeeshopmanagement.utils.EditUserProfile;
+import com.example.prm392_coffeeshopmanagement.utils.PhoneValidator;
 import com.example.prm392_coffeeshopmanagement.viewmodel.UserViewModel;
 import com.squareup.picasso.Picasso;
 
@@ -159,6 +160,11 @@ public class EditUserProfileActivity extends BaseActivity {
         String newFullName = edFullName.getText().toString().trim();
         String newPhone = edPhoneNumber.getText().toString().trim();
 
+        if(!PhoneValidator.isValid(newPhone)) {
+            Toast.makeText(this, "Phone is invalid!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         // Nếu người dùng có chọn ảnh mới, selectedImagePath != ""
         if (!selectedImagePath.isEmpty()) {
             editUserProfile.setAvatarUrl(selectedImagePath);
@@ -172,6 +178,9 @@ public class EditUserProfileActivity extends BaseActivity {
         // Ở đây ta cần userId (có thể editUserProfile có sẵn getUserId())
         int userId = editUserProfile.getUserId();
         userViewModel.updateUserProfile(newFullName, newPhone, editUserProfile.getAvatarUrl(), userId);
+
+        edFullName.setText(editUserProfile.getFullName());
+        edPhoneNumber.setText(editUserProfile.getPhone());
 
         // Thông báo thành công
         Toast.makeText(this, "Update Profile Success!", Toast.LENGTH_SHORT).show();
