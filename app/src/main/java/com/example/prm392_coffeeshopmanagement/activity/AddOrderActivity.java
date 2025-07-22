@@ -108,10 +108,16 @@ public class AddOrderActivity extends BaseActivity {
             String customerName = editTextCustomerName.getText().toString().trim();
             String phoneNumber = editTextPhoneNumber.getText().toString().trim();
 
+            // Kiểm tra các trường không được trống
             if (customerName.isEmpty()) {
                 Toast.makeText(this, "Vui lòng nhập tên khách hàng", Toast.LENGTH_SHORT).show();
                 return;
             }
+            if (phoneNumber.isEmpty()) {
+                Toast.makeText(this, "Vui lòng nhập số điện thoại", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
             if (selectedOrderDetails.isEmpty()) {
                 Toast.makeText(this, "Vui lòng chọn ít nhất một sản phẩm", Toast.LENGTH_SHORT).show();
                 return;
