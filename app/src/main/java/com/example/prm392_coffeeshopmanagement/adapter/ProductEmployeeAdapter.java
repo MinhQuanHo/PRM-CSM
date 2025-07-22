@@ -1,6 +1,8 @@
 package com.example.prm392_coffeeshopmanagement.adapter;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,9 +49,10 @@ public class ProductEmployeeAdapter extends RecyclerView.Adapter<ProductEmployee
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Product product = products.get(position);
         holder.name.setText(product.getProductName());
+        Bitmap bitmap = BitmapFactory.decodeFile(product.getProductImage());
+        holder.image.setImageBitmap(bitmap);
         holder.price.setText(FormartCurrency.formatVNCurrency(product.getProductPrice()));
 
-        Picasso.get().load(product.getProductImage()).into(holder.image);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
