@@ -1,37 +1,28 @@
 package com.example.prm392_coffeeshopmanagement.repository;
 
+import android.app.Application;
 import android.content.Context;
+import android.os.AsyncTask;
 
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 
 import com.example.prm392_coffeeshopmanagement.dao.AppDatabase;
 import com.example.prm392_coffeeshopmanagement.dao.OrderDao;
-import com.example.prm392_coffeeshopmanagement.dao.OrderDetailDao;
-import com.example.prm392_coffeeshopmanagement.entity.Category;
 import com.example.prm392_coffeeshopmanagement.entity.Order;
-import com.example.prm392_coffeeshopmanagement.entity.Product;
 import com.example.prm392_coffeeshopmanagement.utils.DailyOrderStats;
-import com.example.prm392_coffeeshopmanagement.utils.DateUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class OrderRepository {
     private OrderDao orderDao;
-    private OrderDetailDao orderDetailDao;
-    private ExecutorService executorService;
+    private Context context;
 
-    public OrderRepository(Context context) {
-        AppDatabase db = AppDatabase.getInstance(context);
+    public OrderRepository(Application application) {
+        AppDatabase db = AppDatabase.getInstance(application);
         orderDao = db.orderDao();
-        orderDetailDao = db.orderDetailDao();
-        executorService = Executors.newSingleThreadExecutor();
+        context = application.getApplicationContext();
     }
 
     public LiveData<List<Order>> getOrdersCreateByEmployee(int employeeId) {
@@ -43,8 +34,22 @@ public class OrderRepository {
     }
 
     public LiveData<List<DailyOrderStats>> getDailyStatsForCurrentWeek() {
-        Date startDate = DateUtils.getStartOfWeek();
-        Date endDate = DateUtils.getEndOfWeek();
+        Date endDate = new Date();
+        Date startDate = new Date(endDate.getTime() - 7 * 24 * 60 * 60 * 1000L);
         return orderDao.getDailyOrderStatsByDateRange(startDate, endDate);
+    }
+
+    public void insertOrder(Order order, Consumer<Long> callback) {
+        new AsyncTask<Void, Void, Long>() {
+            @Override
+            protected Long doInBackground(Void... voids) {
+                return AppDatabase.getInstance(context).orderDao().insert(order);
+            }
+
+            @Override
+            protected void onPostExecute(Long orderId) {
+                callback.accept(orderId);
+            }
+        }.execute();
     }
 }

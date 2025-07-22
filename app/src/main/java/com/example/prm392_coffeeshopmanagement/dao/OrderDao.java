@@ -2,6 +2,7 @@ package com.example.prm392_coffeeshopmanagement.dao;
 
 import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
+import androidx.room.Insert;
 import androidx.room.Query;
 
 import com.example.prm392_coffeeshopmanagement.entity.Order;
@@ -12,23 +13,20 @@ import java.util.List;
 
 @Dao
 public interface OrderDao {
-        @Query("SELECT * FROM `order`" +
-                        "WHERE user_id = :employeeId")
+        @Query("SELECT * FROM `order` WHERE user_id = :employeeId")
         LiveData<List<Order>> getOrdersCreateByEmployee(int employeeId);
 
-        @Query("SELECT * FROM `order`" +
-                        "WHERE order_id = :orderId")
+        @Query("SELECT * FROM `order` WHERE order_id = :orderId")
         Order getOrderById(int orderId);
 
         @Query("SELECT * FROM `order` WHERE create_at BETWEEN :startDate AND :endDate ORDER BY create_at ASC")
         LiveData<List<Order>> getOrdersByDateRange(Date startDate, Date endDate);
 
         @Query("SELECT strftime('%Y-%m-%d', create_at) as orderDate, SUM(total_price) as totalSales, COUNT(*) as orderCount "
-                        +
-                        "FROM `order` " +
-                        "WHERE create_at BETWEEN :startDate AND :endDate " +
-                        "GROUP BY strftime('%Y-%m-%d', create_at) " +
-                        "ORDER BY orderDate ASC")
+                + "FROM `order` "
+                + "WHERE create_at BETWEEN :startDate AND :endDate "
+                + "GROUP BY strftime('%Y-%m-%d', create_at) "
+                + "ORDER BY orderDate ASC")
         LiveData<List<DailyOrderStats>> getDailyOrderStatsByDateRange(Date startDate, Date endDate);
 
         @Query("SELECT SUM(total_price) FROM `order` WHERE create_at BETWEEN :startDate AND :endDate")
@@ -36,4 +34,7 @@ public interface OrderDao {
 
         @Query("SELECT COUNT(*) FROM `order` WHERE user_id = :userId")
         int countOrdersByUserId(int userId);
+
+        @Insert
+        long insert(Order order);
 }

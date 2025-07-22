@@ -6,12 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,12 +22,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.prm392_coffeeshopmanagement.R;
 import com.example.prm392_coffeeshopmanagement.adapter.OrderEmployeeAdapter;
-import com.example.prm392_coffeeshopmanagement.adapter.ProductEmployeeAdapter;
 import com.example.prm392_coffeeshopmanagement.entity.Order;
-import com.example.prm392_coffeeshopmanagement.entity.Product;
-import com.example.prm392_coffeeshopmanagement.viewmodel.CategoryViewModel;
 import com.example.prm392_coffeeshopmanagement.viewmodel.OrderViewModel;
-import com.example.prm392_coffeeshopmanagement.viewmodel.ProductViewModel;
 import com.example.prm392_coffeeshopmanagement.viewmodel.UserViewModel;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.google.android.material.textfield.TextInputEditText;
@@ -48,11 +42,10 @@ public class OrderListEmployeeActivity extends BaseActivity {
     private OrderViewModel orderViewModel;
     private UserViewModel userViewModel;
     OrderEmployeeAdapter orderAdapter;
-    View rootView;
     TextInputEditText searchBox;
     ShimmerFrameLayout skeletonLayout;
-    private ShimmerFrameLayout skele;
     private int employeeId;
+    private Button buttonAddOrder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,35 +59,47 @@ public class OrderListEmployeeActivity extends BaseActivity {
 
         initData();
         addEvents();
-
         getOrderRequest();
-
         skeletonLayout.startShimmer();
     }
 
     private void initData() {
         skeletonLayout = findViewById(R.id.skeletonLayout);
-
         recyclerView = findViewById(R.id.orderRecyclerView);
-        recyclerView.hasFixedSize();
+        recyclerView.setHasFixedSize(true);
         recyclerView.addItemDecoration(new DividerItemDecoration(this, LinearLayoutManager.VERTICAL));
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
         searchBox = findViewById(R.id.searchEditText);
+        buttonAddOrder = findViewById(R.id.buttonAddOrder);
 
         orderViewModel = new OrderViewModel(getApplication());
         userViewModel = new UserViewModel(getApplication());
 
-        // Lấy username từ SharedPreferences
         SharedPreferences sharedPreferences = getSharedPreferences("UserPrefs", MODE_PRIVATE);
         String username = sharedPreferences.getString("username", null);
-        employeeId = userViewModel.getUserByUserName(username).getUserId();
+        if (username != null) {
+            employeeId = userViewModel.getUserByUserName(username).getUserId();
+        } else {
+            android.widget.Toast.makeText(this, "Vui lòng đăng nhập!", android.widget.Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void addEvents() {
         searchOrder();
+        setupAddOrderButton();
+    }
+
+    private void setupAddOrderButton() {
+        if (buttonAddOrder != null) {
+            buttonAddOrder.setOnClickListener(v -> {
+                Intent intent = new Intent(OrderListEmployeeActivity.this, AddOrderActivity.class);
+                startActivity(intent);
+            });
+        }
     }
 
     private void getOrderRequest() {
@@ -109,16 +114,12 @@ public class OrderListEmployeeActivity extends BaseActivity {
 
     private void renderOrders() {
         orderAdapter = new OrderEmployeeAdapter(orders, this);
-
-        // Set click listener
         orderAdapter.setOnItemClickListener(order -> {
             Intent intent = new Intent(OrderListEmployeeActivity.this, OrderDetailsActivity.class);
-            intent.putExtra("ORDER_ID", order.getOrderId()); // Pass orderId
+            intent.putExtra("ORDER_ID", order.getOrderId());
             startActivity(intent);
         });
-
         recyclerView.setAdapter(orderAdapter);
-
         skeletonLayout.stopShimmer();
         skeletonLayout.setVisibility(View.GONE);
         recyclerView.setVisibility(View.VISIBLE);
@@ -133,13 +134,11 @@ public class OrderListEmployeeActivity extends BaseActivity {
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
                 String searchText = editable.toString().trim();
-
                 orderAdapter.filter(searchText);
                 orderAdapter.notifyDataSetChanged();
             }

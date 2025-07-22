@@ -21,4 +21,8 @@ public class OrderDetailViewModel extends AndroidViewModel {
     public List<OrderDetail> getOrderDetailsByOrderId(int orderId) {
         return orderDetailRepository.getOrderDetailByOrderId(orderId);
     }
+
+    public void insertOrderDetail(OrderDetail orderDetail) {
+        orderDetailRepository.insertOrderDetail(orderDetail);
+    }
 }

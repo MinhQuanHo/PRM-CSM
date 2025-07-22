@@ -39,7 +39,7 @@ dependencies {
     implementation libs.constraintlayout
     implementation 'org.projectlombok:lombok:1.18.34'
     annotationProcessor 'org.projectlombok:lombok:1.18.34'
-//    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation 'com.squareup.picasso:picasso:2.5.2'
     implementation "androidx.room:room-runtime:2.4.3"
     implementation libs.volley
     implementation libs.navigation.fragment

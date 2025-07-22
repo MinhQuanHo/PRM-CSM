@@ -67,13 +67,11 @@ public class OrderDetailsActivity extends BaseActivity {
         recyclerView.setLayoutManager(mLayoutManager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
 
-        imageAvatar = findViewById(R.id.imageAvatar);
         textViewOrderId = findViewById(R.id.textViewOrderId);
         textViewOrderDate = findViewById(R.id.textViewOrderDate);
         textViewPaymentMethod = findViewById(R.id.textViewPaymentMethod);
         textViewUserName = findViewById(R.id.textViewUserName);
-        textViewEmail = findViewById(R.id.textViewEmail);
-        textViewAddress = findViewById(R.id.textViewAddress);
+
         textViewPhoneNumber = findViewById(R.id.textViewPhoneNumber);
         textViewTotalPrice = findViewById(R.id.textViewTotalPrice);
         textViewTotalPayment = findViewById(R.id.textViewTotalPayment);
@@ -101,12 +99,7 @@ public class OrderDetailsActivity extends BaseActivity {
         textViewOrderId.setText(String.valueOf(order.getOrderId()));
         textViewOrderDate.setText(formattedDate);
         textViewPaymentMethod.setText(order.getPaymentStatus());
-        Picasso.get()
-                .load("https://fap.fpt.edu.vn/temp/ImageRollNumber/APHL/22758bf5-7d15-4cc8-84af-082e46fe42fd.jpg")
-                .into(imageAvatar);
         textViewUserName.setText(order.getCustomer());
-        textViewEmail.setText("khangBeoU@gmail.com");
-        textViewAddress.setText("Ở đâu còn lâu mới nói");
         textViewPhoneNumber.setText("0123456789");
         textViewTotalPrice.setText(FormartCurrency.formatVNCurrency(order.getTotalPrice()));
         textViewTotalPayment.setText(FormartCurrency.formatVNCurrency(order.getTotalPrice()));
