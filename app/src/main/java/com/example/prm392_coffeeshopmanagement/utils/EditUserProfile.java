@@ -17,6 +17,4 @@ public class EditUserProfile {
     private String roleName;
     private String avatarUrl;
     private String email;
-
-
 }

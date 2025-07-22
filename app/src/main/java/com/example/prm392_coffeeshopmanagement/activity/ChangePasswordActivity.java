@@ -58,7 +58,6 @@ public class ChangePasswordActivity extends BaseActivity {
             User user = userViewModel.getUserByUserName(username);
             if (user != null) {
                 tvUserName.setText(username);
-                edOldPassword.setText(user.getPassword());
                 btnChangePassword.setOnClickListener(v -> onChangePasswordButtonClick(username
                 ));
             }
@@ -71,15 +70,34 @@ public class ChangePasswordActivity extends BaseActivity {
         String oldPassword = edOldPassword.getText().toString().trim();
         String newPassword = edNewPassword.getText().toString().trim();
         String confirmPassword = edConfirmPassword.getText().toString().trim();
+        if(oldPassword.isEmpty()) {
+            showErrorMessage("Old password is required!");
+            return;
+        }
+
+        if(newPassword.isEmpty()) {
+            showErrorMessage("New password is required!");
+            return;
+        }
+
+        if(confirmPassword.isEmpty()) {
+            showErrorMessage("Confirm password is required!");
+            return;
+        }
 
         // Kiểm tra xem oldPassword có đúng hay không
         // Giả sử userId có trong SharedPreferences hoặc ta lấy user theo oldPassword
         // Dưới đây ví dụ so sánh DB bằng getUserByPassword(...):
         User user = userViewModel.getUserByUserName(username);
+        if(!oldPassword.equals(user.getPassword())) {
+            showErrorMessage("Old password is not correct!");
+            return;
+        }
       if (newPassword.equals(oldPassword)){
           showErrorMessage("New password cannot be the same as the old password!");
           return;
       }
+
         // Kiểm tra newPassword == confirmPassword
         if (!newPassword.equals(confirmPassword)) {
             showErrorMessage("New password and Confirm password do not match!");
